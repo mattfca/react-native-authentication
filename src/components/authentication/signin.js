@@ -1,24 +1,26 @@
-var React = require('react-native');
-var {
+import React, {
+  Component,
   View,
   Text,
   StyleSheet,
   TextInput
-} = React;
+} from 'react-native';
 
-var Button = require('../common/button');
-var Api = require('../common/api');
+import Button from '../common/button';
+import Api from '../common/api';
 
-module.exports = React.createClass({
-  getInitialState: function(){
-    return {
+module.exports = class Signin extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
       email: '',
       password: '',
       errorMessage: ''
-    };
-  },
+    }
+  }
 
-  render: function(){
+  render(){
     return (
       <View style={styles.container}>
         <Text>Sign in</Text>
@@ -41,13 +43,13 @@ module.exports = React.createClass({
           />
 
         <Text style={styles.error}>{this.state.errorMessage}</Text>
-        <Button text="Submit" onPress={this.onPress} />
-        <Button text="I need an account..." onPress={this.onSignupPress} />
+        <Button text="Submit" onPress={ () => this.onPress() } />
+        <Button text="I need an account..." onPress={ () => this.onSignupPress() } />
       </View>
     );
-  },
+  }
 
-  onPress: function(){
+  onPress(){
     Api.authenticate({
       email: this.state.email,
       password: this.state.password
@@ -61,15 +63,14 @@ module.exports = React.createClass({
           })
         }
       });
-  },
+  }
 
-  onSignupPress: function(){
-    // navigate to signup
+  onSignupPress(){
     this.props.navigator.push({name: 'signup'});
   }
-});
+}
 
-var styles = StyleSheet.create({
+let styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',

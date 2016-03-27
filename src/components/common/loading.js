@@ -1,21 +1,22 @@
-var React = require('react-native');
-var {
+import React, {
+  Component,
   View,
   StyleSheet,
   Text
-} = React;
+} from 'react-native';
 
-module.exports = React.createClass({
-  render: function(){
+module.exports = class Loading extends React.Component {
+  render(){
     return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
+      <Spinner
+        overlayColor={this.props.overlayColor}
+        visible={this.props.loading}
+        />
     );
   }
-});
+}
 
-var styles = StyleSheet.create({
+let styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',

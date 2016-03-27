@@ -1,24 +1,26 @@
-var React = require('react-native');
-var {
+import React, {
+  Component,
   Text,
   View,
   StyleSheet,
   TextInput
-} = React;
+} from 'react-native';
 
-var Button = require('../common/button');
-var Api = require('../common/api');
+import Button from '../common/button';
+import Api from '../common/api';
 
-module.exports = React.createClass({
-  getInitialState: function(){
-    return {
+module.exports = class Signup extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
       email: '',
       password: '',
       errorMessage: ''
-    };
-  },
+    }
+  }
 
-  render: function(){
+  render(){
     return (
       <View style={styles.container}>
         <Text>Sign up</Text>
@@ -41,13 +43,13 @@ module.exports = React.createClass({
             />
 
         <Text style={styles.error}>{this.state.errorMessage}</Text>
-        <Button text="Submit" onPress={this.onSignupPress} />
-        <Button text="Back to login" onPress={this.onLoginPress} />
+        <Button text="Submit" onPress={ () => this.onSignupPress() } />
+        <Button text="Back to login" onPress={ () => this.onLoginPress() } />
       </View>
     );
-  },
+  }
 
-  onSignupPress: function(){
+  onSignupPress(){
     // check if email is an email
     // check if password is set
 
@@ -64,15 +66,14 @@ module.exports = React.createClass({
           })
         }
       });
-  },
+  }
 
-  onLoginPress: function(){
-    // navigate to login
+  onLoginPress(){
     this.props.navigator.pop();
   }
-})
+}
 
-var styles = StyleSheet.create({
+let styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',

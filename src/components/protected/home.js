@@ -1,41 +1,41 @@
-var React = require('react-native');
-var {
+import React, {
   View,
   StyleSheet,
   Text
-} = React;
+} from 'react-native';
 
-var Loading = require('../common/loading');
+import Spinner from 'react-native-loading-spinner-overlay';
 
-module.exports = React.createClass({
-  getInitialState: function(){
-    return {
+module.exports = class Button extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
       loading: true
     }
-  },
+  }
 
-  componentWillMount: function(){
+  componentWillMount(){
     setTimeout(() => {
       this.setState({ loading: false });
     },3000);
-  },
+  }
 
-  render: function(){
-    if(this.state.loading){
-      return (
-        <Loading />
-      );
-    }
-
+  render(){
     return (
       <View style={styles.container}>
+      <Spinner
+        style={{marginTop: 30}}
+        overlayColor='rgba(0,0,0,1)'
+        visible={this.state.loading}
+        />
         <Text>Welcome to the app!</Text>
       </View>
     );
   }
-});
+}
 
-var styles = StyleSheet.create({
+let styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',

@@ -1,12 +1,12 @@
-var React = require('react-native');
-var {
+import React, {
+  Component,
   Text,
   StyleSheet,
   TouchableHighlight
-} = React;
+} from 'react-native';
 
-module.exports = React.createClass({
-  render: function(){
+module.exports = class Button extends React.Component {
+  render(){
     return (
       <TouchableHighlight
         underlayColor={'gray'}
@@ -17,9 +17,9 @@ module.exports = React.createClass({
       </TouchableHighlight>
     );
   }
-});
+}
 
-var styles = StyleSheet.create({
+let styles = StyleSheet.create({
   button: {
     justifyContent: 'center',
     alignItems: 'center',

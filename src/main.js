@@ -1,12 +1,13 @@
-var React = require('react-native');
-var {
+import React, {
+  Component,
   StyleSheet,
   Navigator
-} = React;
+} from 'react-native';
 
-var Signin = require('./components/authentication/signin');
-var Signup = require('./components/authentication/signup');
-var Home = require('./components/protected/home');
+
+import Signin from './components/authentication/signin';
+import Signup from './components/authentication/signup';
+import Home from './components/protected/home';
 
 const ROUTES ={
   signin: Signin,
@@ -14,18 +15,14 @@ const ROUTES ={
   home: Home
 };
 
-module.exports = React.createClass({
-  componentWillMount: function(){
-
-  },
-
-  renderScene: function(route, navigator){
-    var Component = ROUTES[route.name];
+module.exports = class Main extends React.Component {
+  renderScene(route, navigator){
+    let Component = ROUTES[route.name];
 
     return <Component route={route} navigator={navigator} />
-  },
+  }
 
-  render: function(){
+  render(){
     return (
       <Navigator
         style={styles.container}
@@ -35,9 +32,9 @@ module.exports = React.createClass({
         />
     );
   }
-});
+}
 
-var styles = StyleSheet.create({
+let styles = StyleSheet.create({
   container: {
     flex: 1
   }
