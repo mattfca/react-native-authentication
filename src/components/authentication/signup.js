@@ -6,6 +6,7 @@ import React, {
   TextInput
 } from 'react-native';
 
+import Realm from '../common/realm';
 import Button from '../common/button';
 import Api from '../common/api';
 
@@ -59,6 +60,16 @@ module.exports = class Signup extends React.Component {
     })
       .then((data) => {
         if(data.success) {
+          Realm.write(() => {
+            Realm.delete(Realm.objects('User'));
+
+            let user = Realm.create('User', {
+              email: this.state.email,
+              token: data.token,
+              refresh: data.refresh
+            });
+          });
+
           this.props.navigator.immediatelyResetRouteStack([{ name: 'home'}]);
         }else{
           this.setState({

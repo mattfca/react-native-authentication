@@ -4,7 +4,8 @@ import React, {
   Navigator
 } from 'react-native';
 
-
+import Jwt from './components/common/jwt';
+import Realm from './components/common/realm';
 import Signin from './components/authentication/signin';
 import Signup from './components/authentication/signup';
 import Home from './components/protected/home';
@@ -23,10 +24,21 @@ module.exports = class Main extends React.Component {
   }
 
   render(){
+    let User = Realm.objects('User')[0];
+
+    let initial = 'signin';
+
+    // if user has a valid token send them to home
+    if(User){
+      if(Jwt.checkExpiredAndRefresh()){
+        initial = 'home';
+      }
+    }
+
     return (
       <Navigator
         style={styles.container}
-        initialRoute={{name: 'signin'}}
+        initialRoute={{name: initial}}
         renderScene={this.renderScene}
         configureScene={() => { return Navigator.SceneConfigs.FloatFromRight; }}
         />

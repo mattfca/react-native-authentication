@@ -6,19 +6,27 @@ import React, {
 
 import Spinner from 'react-native-loading-spinner-overlay';
 
+import Realm from '../common/realm';
+
 module.exports = class Button extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
-      loading: true
+      loading: true,
+      email: ''
     }
   }
 
   componentWillMount(){
-    setTimeout(() => {
-      this.setState({ loading: false });
-    },3000);
+    let User = Realm.objects('User');
+
+    this.setState({
+      email: User[0].email,
+      token: User[0].token,
+      refresh: User[0].refresh,
+      loading: false
+    });
   }
 
   render(){
@@ -29,9 +37,23 @@ module.exports = class Button extends React.Component {
         overlayColor='rgba(0,0,0,1)'
         visible={this.state.loading}
         />
-        <Text>Welcome to the app!</Text>
+        <Text>Email: {this.state.email}!</Text>
+        <Text>Token: {this.state.token}</Text>
+        <Text>Refresh: {this.state.refresh}</Text>
+
+        <Text onPress={ () => this.onLogoutPress() }>Logout</Text>
       </View>
     );
+  }
+
+  onLogoutPress(){
+    Realm.write(() => {
+      // right now we will delete all users
+      // in the future we should be checking for one user?
+      Realm.delete(Realm.objects('User'));
+
+      this.props.navigator.immediatelyResetRouteStack([{ name: 'signin'}]);
+    });
   }
 }
 
