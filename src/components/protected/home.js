@@ -6,7 +6,7 @@ import React, {
 
 import Spinner from 'react-native-loading-spinner-overlay';
 
-import Realm from '../common/realm';
+import User from '../common/user';
 
 module.exports = class Button extends React.Component {
   constructor(props){
@@ -19,12 +19,13 @@ module.exports = class Button extends React.Component {
   }
 
   componentWillMount(){
-    let User = Realm.objects('User');
+
+    let currentUser = User.current();
 
     this.setState({
-      email: User[0].email,
-      token: User[0].token,
-      refresh: User[0].refresh,
+      email: currentUser.email,
+      token: currentUser.token,
+      refresh: currentUser.refresh,
       loading: false
     });
   }
@@ -47,13 +48,8 @@ module.exports = class Button extends React.Component {
   }
 
   onLogoutPress(){
-    Realm.write(() => {
-      // right now we will delete all users
-      // in the future we should be checking for one user?
-      Realm.delete(Realm.objects('User'));
-
+    if(User.deleteAllUsers())
       this.props.navigator.immediatelyResetRouteStack([{ name: 'signin'}]);
-    });
   }
 }
 
