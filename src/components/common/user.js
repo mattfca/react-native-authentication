@@ -13,6 +13,17 @@ module.exports = {
     });
 
     return true;
-  }
+  },
 
+  setUser: function(params){
+    Realm.write(() => {
+      // right now we will delete all users
+      // in the future we should be checking for one user?
+      Realm.delete(Realm.objects('User'));
+
+      let user = Realm.create('User', params);
+    });
+
+    return true
+  }
 }
