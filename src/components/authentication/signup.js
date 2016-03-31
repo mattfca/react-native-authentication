@@ -24,7 +24,7 @@ module.exports = class Signup extends React.Component {
   render(){
     return (
       <View style={styles.container}>
-        <Text>Sign up</Text>
+        <Text style={styles.heading}>Sign up</Text>
 
         <Text style={styles.label}>Email:</Text>
         <TextInput
@@ -85,20 +85,27 @@ let styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white'
+    backgroundColor: '#89bdd3'
+  },
+  heading: {
+    color: 'white',
+    fontSize: 26
   },
   input: {
     padding: 4,
     height: 40,
-    borderColor: 'gray',
+    borderColor: 'white',
+    backgroundColor: 'white',
     borderWidth: 1,
-    borderRadius: 5,
     margin: 5,
-    width: 200,
+    width: 250,
     alignSelf: 'center'
   },
   label : {
-    fontSize: 18
+    fontSize: 18,
+    color: 'white',
+    alignSelf: 'center',
+    width: 250
   },
   error: {
     fontSize: 18,

@@ -23,16 +23,17 @@ let styles = StyleSheet.create({
   button: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 5,
+    borderWidth: 0,
     padding: 5,
-    borderColor: 'black',
+    width: 250,
+    backgroundColor: '#c9c9c9',
     marginTop: 10
   },
 
   buttonText: {
     flex: 1,
     alignSelf: 'center',
-    fontSize: 20
+    fontSize: 20,
+    color: 'white',
   }
 });

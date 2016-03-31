@@ -24,7 +24,7 @@ module.exports = class Signin extends React.Component {
   render(){
     return (
       <View style={styles.container}>
-        <Text>Sign in</Text>
+        <Text style={styles.heading}>Sign in</Text>
 
         <Text style={styles.label}>Email:</Text>
         <TextInput
@@ -44,7 +44,7 @@ module.exports = class Signin extends React.Component {
           />
 
         <Text style={styles.error}>{this.state.errorMessage}</Text>
-        <Button text="Submit" onPress={ () => this.onPress() } />
+        <Button text="Sign in" onPress={ () => this.onPress() } />
         <Button text="I need an account..." onPress={ () => this.onSignupPress() } />
       </View>
     );
@@ -81,20 +81,28 @@ let styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#89bdd3'
+  },
+  heading: {
+    color: 'white',
+    fontSize: 26
   },
   input: {
     padding: 4,
     height: 40,
-    borderColor: 'gray',
+    borderColor: 'white',
+    backgroundColor: 'white',
     borderWidth: 1,
-    borderRadius: 5,
     margin: 5,
-    width: 200,
+    width: 250,
     alignSelf: 'center'
   },
   label : {
-    fontSize: 18
+    fontSize: 18,
+    color: 'white',
+    alignSelf: 'center',
+    width: 250
   },
   error: {
     fontSize: 18,
