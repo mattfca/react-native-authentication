@@ -32,11 +32,6 @@ module.exports = class Signin extends React.Component {
     this.keyboardWillHideListener = DeviceEventEmitter.addListener('keyboardWillHide', this.keyboardWillHide.bind(this))
   }
 
-  componentWillUnmount(){
-    this.keyboardWillShowListener.remove();
-    this.keyboardDWillHideListener.remove();
-  }
-
   keyboardWillShow(e){
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
