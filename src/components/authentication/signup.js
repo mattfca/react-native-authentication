@@ -8,6 +8,7 @@ import React, {
 
 import User from '../common/user';
 import Button from '../common/button';
+import Link from '../common/link';
 import Api from '../common/api';
 
 module.exports = class Signup extends React.Component {
@@ -24,28 +25,36 @@ module.exports = class Signup extends React.Component {
   render(){
     return (
       <View style={styles.container}>
-        <Text style={styles.heading}>Sign up</Text>
-
-        <Text style={styles.label}>Email:</Text>
-        <TextInput
-          style={styles.input}
-          value={this.state.email}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          onChangeText={(text) => this.setState({email: text})}
-          />
-
-        <Text style={styles.label}>Password:</Text>
+        <View style={styles.top}>
+          <Text>
+            <Text style={styles.heading}>Sign up</Text>
+          </Text>
+        </View>
+        <View style={styles.bottom}>
+          <Text style={styles.label}>Email:</Text>
           <TextInput
-            secureTextEntry={true}
             style={styles.input}
-            value={this.state.password}
-            onChangeText={(text) => this.setState({password: text})}
+            value={this.state.email}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            onChangeText={(text) => this.setState({email: text})}
             />
 
-        <Text style={styles.error}>{this.state.errorMessage}</Text>
-        <Button text="Submit" onPress={ () => this.onSignupPress() } />
-        <Button text="Back to login" onPress={ () => this.onLoginPress() } />
+          <Text style={styles.label}>Password:</Text>
+            <TextInput
+              secureTextEntry={true}
+              style={styles.input}
+              value={this.state.password}
+              onChangeText={(text) => this.setState({password: text})}
+              />
+
+          <Text style={styles.error}>{this.state.errorMessage}</Text>
+          <Button text="Sign Up" onPress={ () => this.onSignupPress() } />
+          <Link
+            text="Already have an account? Sign In"
+            style={styles.link}
+            onPress={ () => this.onLoginPress() } />
+        </View>
       </View>
     );
   }
@@ -76,7 +85,7 @@ module.exports = class Signup extends React.Component {
   }
 
   onLoginPress(){
-    this.props.navigator.pop();
+    this.props.navigator.push({name: 'signin'});
   }
 }
 
@@ -86,6 +95,18 @@ let styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#89bdd3'
+  },
+  top: {
+    flex: 1,
+    marginTop: 30,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  bottom: {
+    flex: 1
+  },
+  link: {
+    alignSelf: 'flex-end'
   },
   heading: {
     color: 'white',

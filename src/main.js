@@ -26,7 +26,7 @@ module.exports = class Main extends React.Component {
   render(){
     let User = Realm.objects('User')[0];
 
-    let initial = 'signin';
+    let initial = 'signup';
 
     // if user has a valid token send them to home
     if(User){
