@@ -1,15 +1,19 @@
 import React, {
   Component,
-  View,
   Text,
+  View,
   StyleSheet,
-  TextInput
+  TextInput,
+  Dimensions,
+  DeviceEventEmitter,
+  LayoutAnimation
 } from 'react-native';
 
 import User from '../common/user';
 import Button from '../common/button';
 import Link from '../common/link';
 import Api from '../common/api';
+import Validation from '../common/validation';
 
 module.exports = class Signin extends React.Component {
   constructor(props){
@@ -18,13 +22,43 @@ module.exports = class Signin extends React.Component {
     this.state = {
       email: '',
       password: '',
-      errorMessage: ''
+      errorMessage: '',
+      visibleHeight: Dimensions.get('window').height
     }
+  }
+
+  componentWillMount(){
+    this.keyboardWillShowListener = DeviceEventEmitter.addListener('keyboardWillShow', this.keyboardWillShow.bind(this))
+    this.keyboardWillHideListener = DeviceEventEmitter.addListener('keyboardWillHide', this.keyboardWillHide.bind(this))
+  }
+
+  componentWillUnmount(){
+    this.keyboardWillShowListener.remove();
+    this.keyboardDWillHideListener.remove();
+  }
+
+  keyboardWillShow(e){
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
+    let newSize = e.endCoordinates.height;
+    this.setState({
+      bottomSize: newSize
+    })
+
+    console.log(this.state.visibleHeight);
+  }
+
+  keyboardWillHide(e){
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
+    this.setState({
+      bottomSize: 0
+    })
   }
 
   render(){
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, {paddingBottom: this.state.bottomSize}]}>
         <View style={styles.top}>
           <Text>
             <Text style={styles.heading}>Sign in</Text>
@@ -60,25 +94,28 @@ module.exports = class Signin extends React.Component {
   }
 
   onPress(){
-    Api.authenticate({
-      email: this.state.email,
-      password: this.state.password
-    })
-      .then((data) => {
-        if(data.success) {
-          User.setUser({
-            email: this.state.email,
-            token: data.token,
-            refresh: data.refresh
-          });
+    if(Validation.checkEmail(this.state.email).success
+      && Validation.checkPassword(this.state.password).success){
+        Api.authenticate({
+          email: this.state.email,
+          password: this.state.password
+        })
+          .then((data) => {
+            if(data.success) {
+              User.setUser({
+                email: this.state.email,
+                token: data.token,
+                refresh: data.refresh
+              });
 
-          this.props.navigator.immediatelyResetRouteStack([{ name: 'home'}]);
-        }else{
-          this.setState({
-            errorMessage: data.message
-          })
-        }
-      });
+              this.props.navigator.immediatelyResetRouteStack([{ name: 'home'}]);
+            }else{
+              this.setState({
+                errorMessage: data.message
+              })
+            }
+          });
+    }
   }
 
   onSignupPress(){

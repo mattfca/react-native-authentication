@@ -3,13 +3,17 @@ import React, {
   Text,
   View,
   StyleSheet,
-  TextInput
+  TextInput,
+  Dimensions,
+  DeviceEventEmitter,
+  LayoutAnimation
 } from 'react-native';
 
 import User from '../common/user';
 import Button from '../common/button';
 import Link from '../common/link';
 import Api from '../common/api';
+import Validation from '../common/validation';
 
 module.exports = class Signup extends React.Component {
   constructor(props){
@@ -18,13 +22,43 @@ module.exports = class Signup extends React.Component {
     this.state = {
       email: '',
       password: '',
-      errorMessage: ''
+      errorMessage: '',
+      bottomSize: 0
     }
+  }
+
+  componentWillMount(){
+    this.keyboardWillShowListener = DeviceEventEmitter.addListener('keyboardWillShow', this.keyboardWillShow.bind(this))
+    this.keyboardWillHideListener = DeviceEventEmitter.addListener('keyboardWillHide', this.keyboardWillHide.bind(this))
+  }
+
+  componentWillUnmount(){
+    this.keyboardWillShowListener.remove();
+    this.keyboardDWillHideListener.remove();
+  }
+
+  keyboardWillShow(e){
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
+    let newSize = e.endCoordinates.height;
+    this.setState({
+      bottomSize: newSize
+    })
+
+    console.log(this.state.visibleHeight);
+  }
+
+  keyboardWillHide(e){
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
+    this.setState({
+      bottomSize: 0
+    })
   }
 
   render(){
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, {paddingBottom: this.state.bottomSize}]}>
         <View style={styles.top}>
           <Text>
             <Text style={styles.heading}>Sign up</Text>
@@ -60,28 +94,35 @@ module.exports = class Signup extends React.Component {
   }
 
   onSignupPress(){
-    // check if email is an email
-    // check if password is set
+    let emailValidation = Validation.checkEmail(this.state.email);
+    let passwordValidation = Validation.checkPassword(this.state.password);
+    if(emailValidation.success
+      && passwordValidation.success){
+      Api.registration({
+        email: this.state.email,
+        password: this.state.password
+      })
+        .then((data) => {
+          if(data.success) {
+            User.setUser({
+              email: this.state.email,
+              token: data.token,
+              refresh: data.refresh
+            });
 
-    Api.registration({
-      email: this.state.email,
-      password: this.state.password
-    })
-      .then((data) => {
-        if(data.success) {
-          User.setUser({
-            email: this.state.email,
-            token: data.token,
-            refresh: data.refresh
-          });
-
-          this.props.navigator.immediatelyResetRouteStack([{ name: 'home'}]);
-        }else{
-          this.setState({
-            errorMessage: data.message
-          })
-        }
-      });
+            this.props.navigator.immediatelyResetRouteStack([{ name: 'home'}]);
+          }else{
+            this.setState({
+              errorMessage: data.message
+            })
+          }
+        });
+    }else{
+      this.setState({
+        errorMessage: emailValidation.message ?
+          emailValidation.message : passwordValidation.message
+      })
+    }
   }
 
   onLoginPress(){
