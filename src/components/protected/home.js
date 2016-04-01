@@ -49,7 +49,7 @@ module.exports = class Button extends React.Component {
 
   onLogoutPress(){
     if(User.deleteAllUsers())
-      this.props.navigator.immediatelyResetRouteStack([{ name: 'signin'}]);
+      this.props.navigator.immediatelyResetRouteStack([{ name: 'signup'}]);
   }
 }
 
