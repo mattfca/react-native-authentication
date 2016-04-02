@@ -32,6 +32,17 @@ module.exports = class Signin extends React.Component {
     this.keyboardWillHideListener = DeviceEventEmitter.addListener('keyboardWillHide', this.keyboardWillHide.bind(this))
   }
 
+  componentWillUnmount(){
+    if(this.keyboardWillShowListener){
+      this.keyboardWillShowListener = DeviceEventEmitter.addListener('keyboardWillShow', this.keyboardWillShow.bind(this))
+      console.log("unmount willshow");
+    }
+    if(this.keyboardWillHideListener){
+      this.keyboardWillHideListener = DeviceEventEmitter.addListener('keyboardWillHide', this.keyboardWillHide.bind(this))
+      console.log("unmount willhide");
+    }
+  }
+
   keyboardWillShow(e){
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
@@ -39,8 +50,6 @@ module.exports = class Signin extends React.Component {
     this.setState({
       bottomSize: newSize
     })
-
-    console.log(this.state.visibleHeight);
   }
 
   keyboardWillHide(e){
@@ -89,8 +98,11 @@ module.exports = class Signin extends React.Component {
   }
 
   onPress(){
-    if(Validation.checkEmail(this.state.email).success
-      && Validation.checkPassword(this.state.password).success){
+    let emailValidation = Validation.checkEmail(this.state.email);
+    let passwordValidation = Validation.checkPassword(this.state.password);
+
+    if(emailValidation.success
+      && passwordValidation.success){
         Api.authenticate({
           email: this.state.email,
           password: this.state.password
@@ -110,6 +122,11 @@ module.exports = class Signin extends React.Component {
               })
             }
           });
+    }else{
+      this.setState({
+        errorMessage: emailValidation.message ?
+          emailValidation.message : passwordValidation.message
+      })
     }
   }
 

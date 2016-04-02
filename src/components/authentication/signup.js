@@ -33,8 +33,10 @@ module.exports = class Signup extends React.Component {
   }
 
   componentWillUnmount(){
-    this.keyboardWillShowListener.remove();
-    this.keyboardDWillHideListener.remove();
+    if(this.keyboardWillShowListener)
+      this.keyboardWillShowListener = DeviceEventEmitter.addListener('keyboardWillShow', this.keyboardWillShow.bind(this))
+    if(this.keyboardWillHideListener)
+      this.keyboardWillHideListener = DeviceEventEmitter.addListener('keyboardWillHide', this.keyboardWillHide.bind(this))
   }
 
   keyboardWillShow(e){
@@ -44,8 +46,6 @@ module.exports = class Signup extends React.Component {
     this.setState({
       bottomSize: newSize
     })
-
-    console.log(this.state.visibleHeight);
   }
 
   keyboardWillHide(e){
@@ -96,6 +96,7 @@ module.exports = class Signup extends React.Component {
   onSignupPress(){
     let emailValidation = Validation.checkEmail(this.state.email);
     let passwordValidation = Validation.checkPassword(this.state.password);
+    
     if(emailValidation.success
       && passwordValidation.success){
       Api.registration({
